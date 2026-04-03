@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import StatusBadge from "@/components/StatusBadge";
 import DocLink from "@/components/DocLink";
@@ -14,6 +14,7 @@ interface DocumentData {
   filename: string;
   draftStatus: string;
   signatureStatus: string;
+  archived: boolean;
 }
 
 const DRAFT_STATUS_OPTIONS = [
@@ -41,21 +42,24 @@ export default function DocumentsPage() {
   const [documents, setDocuments] = useState<DocumentData[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<number | null>(null);
+  const [showArchived, setShowArchived] = useState(false);
+
+  const fetchDocuments = useCallback(async () => {
+    try {
+      const url = showArchived ? "/api/documents?archived=true" : "/api/documents";
+      const res = await fetch(url);
+      const data = await res.json();
+      setDocuments(data);
+    } catch (error) {
+      console.error("Failed to fetch documents:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [showArchived]);
 
   useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        const res = await fetch("/api/documents");
-        const data = await res.json();
-        setDocuments(data);
-      } catch (error) {
-        console.error("Failed to fetch documents:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchDocuments();
-  }, []);
+  }, [fetchDocuments]);
 
   const handleStatusChange = async (
     id: number,
@@ -82,6 +86,36 @@ export default function DocumentsPage() {
     }
   };
 
+  const handleArchiveToggle = async (id: number, archive: boolean) => {
+    setUpdating(id);
+    try {
+      const res = await fetch(`/api/documents/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ archived: archive }),
+      });
+      if (res.ok) {
+        if (!showArchived && archive) {
+          // Remove from view when archiving in active view
+          setDocuments((prev) => prev.filter((d) => d.id !== id));
+        } else {
+          const updated = await res.json();
+          setDocuments((prev) =>
+            prev.map((d) => (d.id === id ? updated : d))
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Failed to update document:", error);
+    } finally {
+      setUpdating(null);
+    }
+  };
+
+  const activeDocs = documents.filter((d) => !d.archived);
+  const archivedDocs = documents.filter((d) => d.archived);
+  const displayDocs = showArchived ? documents : activeDocs;
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -94,11 +128,28 @@ export default function DocumentsPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-bold text-text-dark">Document Status</h2>
-        <p className="text-sm text-text-med mt-1">
-          Review and manage qualification document lifecycle
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-text-dark">Document Status</h2>
+          <p className="text-sm text-text-med mt-1">
+            Review and manage qualification document lifecycle
+          </p>
+        </div>
+        {isAdmin && (
+          <button
+            onClick={() => setShowArchived(!showArchived)}
+            className={`flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+              showArchived
+                ? "bg-navy text-white"
+                : "bg-gray-100 text-text-med hover:bg-gray-200"
+            }`}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+            </svg>
+            {showArchived ? `Showing All (${archivedDocs.length} archived)` : `Show Archived (${archivedDocs.length})`}
+          </button>
+        )}
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -124,22 +175,34 @@ export default function DocumentsPage() {
                 <th className="px-4 py-3 text-xs font-semibold text-text-dark uppercase tracking-wider">
                   Signature Status
                 </th>
+                {isAdmin && (
+                  <th className="px-4 py-3 text-xs font-semibold text-text-dark uppercase tracking-wider">
+
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {documents.map((doc) => (
+              {displayDocs.map((doc) => (
                 <tr
                   key={doc.id}
                   className={`hover:bg-gray-50/50 ${
                     updating === doc.id ? "opacity-50" : ""
-                  }`}
+                  } ${doc.archived ? "bg-gray-50/70" : ""}`}
                 >
                   <td className="px-4 py-3 text-sm whitespace-nowrap">
-                    <DocLink
-                      docId={doc.docId}
-                      folder={doc.folder}
-                      filename={doc.filename}
-                    />
+                    <div className="flex items-center gap-2">
+                      <DocLink
+                        docId={doc.docId}
+                        folder={doc.folder}
+                        filename={doc.filename}
+                      />
+                      {doc.archived && (
+                        <span className="text-[10px] px-1.5 py-0.5 bg-gray-200 text-text-med rounded font-medium">
+                          ARCHIVED
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-sm text-text-dark max-w-xs truncate">
                     {doc.title}
@@ -151,7 +214,7 @@ export default function DocumentsPage() {
                     {doc.folder}
                   </td>
                   <td className="px-4 py-3">
-                    {isAdmin ? (
+                    {isAdmin && !doc.archived ? (
                       <select
                         value={doc.draftStatus}
                         onChange={(e) =>
@@ -171,7 +234,7 @@ export default function DocumentsPage() {
                     )}
                   </td>
                   <td className="px-4 py-3">
-                    {isAdmin ? (
+                    {isAdmin && !doc.archived ? (
                       <select
                         value={doc.signatureStatus}
                         onChange={(e) =>
@@ -194,14 +257,30 @@ export default function DocumentsPage() {
                       <StatusBadge status={doc.signatureStatus} />
                     )}
                   </td>
+                  {isAdmin && (
+                    <td className="px-4 py-3">
+                      <button
+                        onClick={() => handleArchiveToggle(doc.id, !doc.archived)}
+                        disabled={updating === doc.id}
+                        className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 ${
+                          doc.archived
+                            ? "text-green bg-green/10 hover:bg-green/20"
+                            : "text-text-med bg-gray-100 hover:bg-gray-200"
+                        }`}
+                        title={doc.archived ? "Restore this document" : "Archive this document"}
+                      >
+                        {doc.archived ? "Restore" : "Archive"}
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {documents.length === 0 && (
+        {displayDocs.length === 0 && (
           <div className="px-6 py-10 text-center text-text-med text-sm">
-            No documents found.
+            {showArchived ? "No documents found." : "No active documents found."}
           </div>
         )}
       </div>

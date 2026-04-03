@@ -29,6 +29,7 @@ model Document {
   signerCount     Int     @default(0)
   dateIssued      String?
   notes           String  @default("")
+  archived        Boolean @default(false)
 }
 
 model ActionItem {

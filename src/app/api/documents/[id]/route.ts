@@ -23,11 +23,11 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { draftStatus, signatureStatus } = body;
+    const { draftStatus, signatureStatus, archived } = body;
 
-    if (!draftStatus && !signatureStatus) {
+    if (!draftStatus && !signatureStatus && archived === undefined) {
       return NextResponse.json(
-        { error: "Provide draftStatus and/or signatureStatus to update" },
+        { error: "Provide draftStatus, signatureStatus, or archived to update" },
         { status: 400 },
       );
     }
@@ -42,7 +42,7 @@ export async function PATCH(
       );
     }
 
-    const updateData: Record<string, string> = {};
+    const updateData: Record<string, string | boolean> = {};
     const username = (session.user as { username?: string }).username ?? session.user.name ?? "unknown";
 
     if (draftStatus) {
@@ -67,6 +67,19 @@ export async function PATCH(
           action: `Updated signatureStatus for document ${existing.docId}`,
           previousValue: existing.signatureStatus,
           newValue: signatureStatus,
+        },
+      });
+    }
+
+    if (archived !== undefined) {
+      updateData.archived = archived;
+      await prisma.activityLog.create({
+        data: {
+          timestamp: new Date().toISOString(),
+          username,
+          action: `${archived ? "Archived" : "Restored"} document ${existing.docId}`,
+          previousValue: String(existing.archived),
+          newValue: String(archived),
         },
       });
     }

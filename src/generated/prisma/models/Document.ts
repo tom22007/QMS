@@ -49,6 +49,7 @@ export type DocumentMinAggregateOutputType = {
   signerCount: number | null
   dateIssued: string | null
   notes: string | null
+  archived: boolean | null
 }
 
 export type DocumentMaxAggregateOutputType = {
@@ -64,6 +65,7 @@ export type DocumentMaxAggregateOutputType = {
   signerCount: number | null
   dateIssued: string | null
   notes: string | null
+  archived: boolean | null
 }
 
 export type DocumentCountAggregateOutputType = {
@@ -79,6 +81,7 @@ export type DocumentCountAggregateOutputType = {
   signerCount: number
   dateIssued: number
   notes: number
+  archived: number
   _all: number
 }
 
@@ -106,6 +109,7 @@ export type DocumentMinAggregateInputType = {
   signerCount?: true
   dateIssued?: true
   notes?: true
+  archived?: true
 }
 
 export type DocumentMaxAggregateInputType = {
@@ -121,6 +125,7 @@ export type DocumentMaxAggregateInputType = {
   signerCount?: true
   dateIssued?: true
   notes?: true
+  archived?: true
 }
 
 export type DocumentCountAggregateInputType = {
@@ -136,6 +141,7 @@ export type DocumentCountAggregateInputType = {
   signerCount?: true
   dateIssued?: true
   notes?: true
+  archived?: true
   _all?: true
 }
 
@@ -238,6 +244,7 @@ export type DocumentGroupByOutputType = {
   signerCount: number
   dateIssued: string | null
   notes: string
+  archived: boolean
   _count: DocumentCountAggregateOutputType | null
   _avg: DocumentAvgAggregateOutputType | null
   _sum: DocumentSumAggregateOutputType | null
@@ -276,6 +283,7 @@ export type DocumentWhereInput = {
   signerCount?: Prisma.IntFilter<"Document"> | number
   dateIssued?: Prisma.StringNullableFilter<"Document"> | string | null
   notes?: Prisma.StringFilter<"Document"> | string
+  archived?: Prisma.BoolFilter<"Document"> | boolean
 }
 
 export type DocumentOrderByWithRelationInput = {
@@ -291,6 +299,7 @@ export type DocumentOrderByWithRelationInput = {
   signerCount?: Prisma.SortOrder
   dateIssued?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrder
+  archived?: Prisma.SortOrder
 }
 
 export type DocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -309,6 +318,7 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   signerCount?: Prisma.IntFilter<"Document"> | number
   dateIssued?: Prisma.StringNullableFilter<"Document"> | string | null
   notes?: Prisma.StringFilter<"Document"> | string
+  archived?: Prisma.BoolFilter<"Document"> | boolean
 }, "id" | "docId">
 
 export type DocumentOrderByWithAggregationInput = {
@@ -324,6 +334,7 @@ export type DocumentOrderByWithAggregationInput = {
   signerCount?: Prisma.SortOrder
   dateIssued?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrder
+  archived?: Prisma.SortOrder
   _count?: Prisma.DocumentCountOrderByAggregateInput
   _avg?: Prisma.DocumentAvgOrderByAggregateInput
   _max?: Prisma.DocumentMaxOrderByAggregateInput
@@ -347,6 +358,7 @@ export type DocumentScalarWhereWithAggregatesInput = {
   signerCount?: Prisma.IntWithAggregatesFilter<"Document"> | number
   dateIssued?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null
   notes?: Prisma.StringWithAggregatesFilter<"Document"> | string
+  archived?: Prisma.BoolWithAggregatesFilter<"Document"> | boolean
 }
 
 export type DocumentCreateInput = {
@@ -361,6 +373,7 @@ export type DocumentCreateInput = {
   signerCount?: number
   dateIssued?: string | null
   notes?: string
+  archived?: boolean
 }
 
 export type DocumentUncheckedCreateInput = {
@@ -376,6 +389,7 @@ export type DocumentUncheckedCreateInput = {
   signerCount?: number
   dateIssued?: string | null
   notes?: string
+  archived?: boolean
 }
 
 export type DocumentUpdateInput = {
@@ -390,6 +404,7 @@ export type DocumentUpdateInput = {
   signerCount?: Prisma.IntFieldUpdateOperationsInput | number
   dateIssued?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.StringFieldUpdateOperationsInput | string
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type DocumentUncheckedUpdateInput = {
@@ -405,6 +420,7 @@ export type DocumentUncheckedUpdateInput = {
   signerCount?: Prisma.IntFieldUpdateOperationsInput | number
   dateIssued?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.StringFieldUpdateOperationsInput | string
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type DocumentCreateManyInput = {
@@ -420,6 +436,7 @@ export type DocumentCreateManyInput = {
   signerCount?: number
   dateIssued?: string | null
   notes?: string
+  archived?: boolean
 }
 
 export type DocumentUpdateManyMutationInput = {
@@ -434,6 +451,7 @@ export type DocumentUpdateManyMutationInput = {
   signerCount?: Prisma.IntFieldUpdateOperationsInput | number
   dateIssued?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.StringFieldUpdateOperationsInput | string
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type DocumentUncheckedUpdateManyInput = {
@@ -449,6 +467,7 @@ export type DocumentUncheckedUpdateManyInput = {
   signerCount?: Prisma.IntFieldUpdateOperationsInput | number
   dateIssued?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.StringFieldUpdateOperationsInput | string
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type DocumentCountOrderByAggregateInput = {
@@ -464,6 +483,7 @@ export type DocumentCountOrderByAggregateInput = {
   signerCount?: Prisma.SortOrder
   dateIssued?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  archived?: Prisma.SortOrder
 }
 
 export type DocumentAvgOrderByAggregateInput = {
@@ -484,6 +504,7 @@ export type DocumentMaxOrderByAggregateInput = {
   signerCount?: Prisma.SortOrder
   dateIssued?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  archived?: Prisma.SortOrder
 }
 
 export type DocumentMinOrderByAggregateInput = {
@@ -499,6 +520,7 @@ export type DocumentMinOrderByAggregateInput = {
   signerCount?: Prisma.SortOrder
   dateIssued?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  archived?: Prisma.SortOrder
 }
 
 export type DocumentSumOrderByAggregateInput = {
@@ -529,6 +551,7 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   signerCount?: boolean
   dateIssued?: boolean
   notes?: boolean
+  archived?: boolean
 }, ExtArgs["result"]["document"]>
 
 export type DocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -544,6 +567,7 @@ export type DocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   signerCount?: boolean
   dateIssued?: boolean
   notes?: boolean
+  archived?: boolean
 }, ExtArgs["result"]["document"]>
 
 export type DocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -559,6 +583,7 @@ export type DocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   signerCount?: boolean
   dateIssued?: boolean
   notes?: boolean
+  archived?: boolean
 }, ExtArgs["result"]["document"]>
 
 export type DocumentSelectScalar = {
@@ -574,9 +599,10 @@ export type DocumentSelectScalar = {
   signerCount?: boolean
   dateIssued?: boolean
   notes?: boolean
+  archived?: boolean
 }
 
-export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "docId" | "title" | "revision" | "folder" | "filename" | "draftStatus" | "signatureStatus" | "adobeSignTags" | "signerCount" | "dateIssued" | "notes", ExtArgs["result"]["document"]>
+export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "docId" | "title" | "revision" | "folder" | "filename" | "draftStatus" | "signatureStatus" | "adobeSignTags" | "signerCount" | "dateIssued" | "notes" | "archived", ExtArgs["result"]["document"]>
 
 export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Document"
@@ -594,6 +620,7 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     signerCount: number
     dateIssued: string | null
     notes: string
+    archived: boolean
   }, ExtArgs["result"]["document"]>
   composites: {}
 }
@@ -1029,6 +1056,7 @@ export interface DocumentFieldRefs {
   readonly signerCount: Prisma.FieldRef<"Document", 'Int'>
   readonly dateIssued: Prisma.FieldRef<"Document", 'String'>
   readonly notes: Prisma.FieldRef<"Document", 'String'>
+  readonly archived: Prisma.FieldRef<"Document", 'Boolean'>
 }
     
 

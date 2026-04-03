@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 export async function GET() {
   try {
     const [documents, actionItems, auditItems] = await Promise.all([
-      prisma.document.findMany(),
+      prisma.document.findMany({ where: { archived: false } }),
       prisma.actionItem.findMany(),
       prisma.auditChecklistItem.findMany(),
     ]);

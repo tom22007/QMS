@@ -1,9 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const documents = await prisma.document.findMany();
+    const showArchived = request.nextUrl.searchParams.get("archived") === "true";
+    const documents = await prisma.document.findMany({
+      where: showArchived ? {} : { archived: false },
+    });
     return NextResponse.json(documents);
   } catch (error) {
     console.error("Failed to fetch documents:", error);

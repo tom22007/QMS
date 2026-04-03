@@ -101,7 +101,8 @@ export const DocumentScalarFieldEnum = {
   adobeSignTags: 'adobeSignTags',
   signerCount: 'signerCount',
   dateIssued: 'dateIssued',
-  notes: 'notes'
+  notes: 'notes',
+  archived: 'archived'
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
