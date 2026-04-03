@@ -105,3 +105,12 @@ model GoverningSop {
   effectiveDate String?
   aligned       Boolean @default(true)
 }
+
+model Comment {
+  id        Int    @id @default(autoincrement())
+  docId     String
+  username  String
+  name      String
+  text      String
+  createdAt String
+}

@@ -60,7 +60,8 @@ export const ModelName = {
   AuditChecklistItem: 'AuditChecklistItem',
   ActivityLog: 'ActivityLog',
   KeyDate: 'KeyDate',
-  GoverningSop: 'GoverningSop'
+  GoverningSop: 'GoverningSop',
+  Comment: 'Comment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -203,6 +204,18 @@ export const GoverningSopScalarFieldEnum = {
 } as const
 
 export type GoverningSopScalarFieldEnum = (typeof GoverningSopScalarFieldEnum)[keyof typeof GoverningSopScalarFieldEnum]
+
+
+export const CommentScalarFieldEnum = {
+  id: 'id',
+  docId: 'docId',
+  username: 'username',
+  name: 'name',
+  text: 'text',
+  createdAt: 'createdAt'
+} as const
+
+export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
 
 
 export const SortOrder = {

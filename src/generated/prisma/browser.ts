@@ -67,3 +67,8 @@ export type KeyDate = Prisma.KeyDateModel
  * 
  */
 export type GoverningSop = Prisma.GoverningSopModel
+/**
+ * Model Comment
+ * 
+ */
+export type Comment = Prisma.CommentModel
