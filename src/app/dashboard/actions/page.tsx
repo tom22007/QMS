@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import StatusBadge from "@/components/StatusBadge";
 import DocLink from "@/components/DocLink";
+import { useCompliance } from "@/components/ComplianceContext";
+import { useToast } from "@/components/ToastProvider";
 
 interface ActionItem {
   id: number;
@@ -28,6 +30,8 @@ interface DocumentData {
 export default function ActionsPage() {
   const { data: session } = useSession();
   const isAdmin = (session?.user as { role?: string })?.role === "admin";
+  const { data: compliance, refresh: refreshCompliance } = useCompliance();
+  const { showToast } = useToast();
 
   const [actions, setActions] = useState<ActionItem[]>([]);
   const [documents, setDocuments] = useState<DocumentData[]>([]);
@@ -72,6 +76,11 @@ export default function ActionsPage() {
         setActions((prev) =>
           prev.map((a) => (a.id === id ? updated : a))
         );
+        const oldPct = compliance?.master ?? 0;
+        const newData = await refreshCompliance();
+        if (newData) {
+          showToast(`Action completed. Compliance: ${oldPct}% → ${newData.master}%`);
+        }
       }
     } catch (error) {
       console.error("Failed to complete action:", error);

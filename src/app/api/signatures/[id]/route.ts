@@ -62,7 +62,69 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json(updated);
+    // Cascading updates: check if all signatures for this document are now signed
+    let cascaded = { documentSigned: false, actionsCompleted: 0 };
+
+    if (status === "Signed") {
+      const allSigsForDoc = await prisma.signature.findMany({
+        where: { docId: existing.docId },
+      });
+      const allSigned = allSigsForDoc.length > 0 && allSigsForDoc.every((s) => s.status === "Signed");
+
+      if (allSigned) {
+        const doc = await prisma.document.findFirst({
+          where: { docId: existing.docId },
+        });
+
+        if (doc && doc.signatureStatus !== "Signed") {
+          await prisma.document.update({
+            where: { id: doc.id },
+            data: { signatureStatus: "Signed" },
+          });
+          await prisma.activityLog.create({
+            data: {
+              timestamp: new Date().toISOString(),
+              username: "system",
+              action: `Auto-updated ${existing.docId} signatureStatus to "Signed" (all signers complete)`,
+              previousValue: doc.signatureStatus,
+              newValue: "Signed",
+            },
+          });
+          cascaded.documentSigned = true;
+
+          // Auto-complete related signature routing action items
+          const relatedActions = await prisma.actionItem.findMany({
+            where: {
+              linkedDocId: existing.docId,
+              status: "Open",
+              description: { contains: "signature" },
+            },
+          });
+          for (const action of relatedActions) {
+            await prisma.actionItem.update({
+              where: { id: action.id },
+              data: {
+                status: "Complete",
+                completedBy: "system",
+                completedAt: new Date().toISOString(),
+              },
+            });
+            await prisma.activityLog.create({
+              data: {
+                timestamp: new Date().toISOString(),
+                username: "system",
+                action: `Auto-completed action "${action.description}" (all signatures for ${existing.docId} complete)`,
+                previousValue: "Open",
+                newValue: "Complete",
+              },
+            });
+            cascaded.actionsCompleted++;
+          }
+        }
+      }
+    }
+
+    return NextResponse.json({ ...updated, cascaded });
   } catch (error) {
     console.error("Failed to update signature:", error);
     return NextResponse.json(

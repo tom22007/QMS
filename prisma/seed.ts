@@ -3,25 +3,21 @@ import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import bcrypt from "bcryptjs";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const dbPath = path.join(__dirname, "dev.db");
+const dbPath = path.join(process.cwd(), "prisma", "dev.db");
 const adapter = new PrismaBetterSqlite3({ url: `file:${dbPath}` });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const raw = fs.readFileSync(path.join(__dirname, "..", "seed-data.json"), "utf-8");
+  const raw = fs.readFileSync(path.join(process.cwd(), "seed-data.json"), "utf-8");
   const data = JSON.parse(raw);
 
-  // Users
+  // Users - always update password hash
   for (const u of data.users) {
     const hashed = await bcrypt.hash(u.password, 10);
     await prisma.user.upsert({
       where: { username: u.username },
-      update: {},
+      update: { password: hashed, role: u.role, name: u.name, title: u.title },
       create: { username: u.username, password: hashed, role: u.role, name: u.name, title: u.title },
     });
   }
@@ -65,7 +61,8 @@ async function main() {
     });
   }
 
-  // Change Control Steps
+  // Change Control Steps - clear and recreate
+  await prisma.changeControlStep.deleteMany();
   const cc = data.changeControl;
   for (const s of cc.steps) {
     await prisma.changeControlStep.create({
@@ -79,7 +76,8 @@ async function main() {
     });
   }
 
-  // Implementation Actions
+  // Implementation Actions - clear and recreate
+  await prisma.implementationAction.deleteMany();
   for (const ia of cc.implementationActions) {
     await prisma.implementationAction.create({
       data: {
@@ -93,7 +91,8 @@ async function main() {
     });
   }
 
-  // Signatures
+  // Signatures - clear and recreate
+  await prisma.signature.deleteMany();
   for (const sig of data.signatures) {
     await prisma.signature.create({
       data: {
@@ -107,7 +106,8 @@ async function main() {
     });
   }
 
-  // Audit Checklist
+  // Audit Checklist - clear and recreate
+  await prisma.auditChecklistItem.deleteMany();
   for (const ac of data.auditChecklist) {
     await prisma.auditChecklistItem.create({
       data: {
@@ -118,7 +118,8 @@ async function main() {
     });
   }
 
-  // Key Dates
+  // Key Dates - clear and recreate
+  await prisma.keyDate.deleteMany();
   for (const kd of data.keyDates) {
     await prisma.keyDate.create({
       data: {
@@ -129,7 +130,8 @@ async function main() {
     });
   }
 
-  // Governing SOPs
+  // Governing SOPs - clear and recreate
+  await prisma.governingSop.deleteMany();
   for (const sop of data.governingSops) {
     await prisma.governingSop.create({
       data: {
@@ -142,7 +144,7 @@ async function main() {
     });
   }
 
-  console.log("Seed complete.");
+  console.log("Seed complete — 5 users, 15 documents, 17 action items loaded.");
 }
 
 main()

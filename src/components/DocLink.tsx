@@ -1,6 +1,6 @@
 "use client";
 
-import { getSharePointUrl } from "@/lib/sharepoint";
+import Link from "next/link";
 
 interface DocLinkProps {
   docId: string;
@@ -10,15 +10,13 @@ interface DocLinkProps {
 }
 
 export default function DocLink({ docId, folder, filename, className }: DocLinkProps) {
-  const url = getSharePointUrl(folder, filename);
+  const viewerUrl = `/dashboard/viewer?docId=${encodeURIComponent(docId)}&folder=${encodeURIComponent(folder)}&filename=${encodeURIComponent(filename)}`;
   return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
+    <Link
+      href={viewerUrl}
       className={className || "text-navy hover:text-navy-light font-medium underline decoration-navy/30 hover:decoration-navy"}
     >
       {docId}
-    </a>
+    </Link>
   );
 }

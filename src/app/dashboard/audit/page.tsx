@@ -3,6 +3,8 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import StatusBadge from "@/components/StatusBadge";
+import { useCompliance } from "@/components/ComplianceContext";
+import { useToast } from "@/components/ToastProvider";
 
 interface ChecklistItem {
   id: number;
@@ -36,12 +38,11 @@ interface Doc {
   filename: string;
 }
 
-const SHAREPOINT_BASE =
-  "https://reesscientific0-my.sharepoint.com/personal/todonnell_reesscientific_com/Documents/Claude%20-%20Rees%20Software%20Validation%20Documents/";
-
 export default function AuditPage() {
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === "admin";
+  const { data: compliance, refresh: refreshCompliance } = useCompliance();
+  const { showToast } = useToast();
   const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
   const [keyDates, setKeyDates] = useState<KeyDate[]>([]);
   const [sops, setSops] = useState<Sop[]>([]);
@@ -73,6 +74,12 @@ export default function AuditPage() {
     if (res.ok) {
       const updated = await res.json();
       setChecklist((prev) => prev.map((c) => (c.id === item.id ? updated : c)));
+      const oldPct = compliance?.master ?? 0;
+      const newData = await refreshCompliance();
+      if (newData) {
+        const action = updated.checked ? "checked" : "unchecked";
+        showToast(`Audit item ${action}. Compliance: ${oldPct}% → ${newData.master}%`);
+      }
     }
   }
 
@@ -80,9 +87,9 @@ export default function AuditPage() {
     if (!docId) return null;
     const doc = docs.find((d) => d.docId === docId);
     if (!doc) return docId;
-    const url = `${SHAREPOINT_BASE}${doc.folder}/${encodeURIComponent(doc.filename)}`;
+    const viewerUrl = `/dashboard/viewer?docId=${encodeURIComponent(doc.docId)}&folder=${encodeURIComponent(doc.folder)}&filename=${encodeURIComponent(doc.filename)}`;
     return (
-      <a href={url} target="_blank" rel="noopener noreferrer" className="text-navy hover:text-navy-light underline decoration-navy/30">
+      <a href={viewerUrl} className="text-navy hover:text-navy-light underline decoration-navy/30">
         {docId}
       </a>
     );
