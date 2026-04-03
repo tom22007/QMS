@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import DocLink from "@/components/DocLink";
 import StatusBadge from "@/components/StatusBadge";
+import { useCompliance } from "@/components/ComplianceContext";
+import { useToast } from "@/components/ToastProvider";
 
 interface Signature {
   id: number;
@@ -37,6 +39,8 @@ const NO_SIGNATURE_REQUIRED = ["DS-0001", "RA-0001", "RA-2026-0003", "RTM-0001",
 export default function SignaturesPage() {
   const { data: session } = useSession();
   const isAdmin = (session?.user as { role?: string })?.role === "admin";
+  const { data: compliance, refresh: refreshCompliance } = useCompliance();
+  const { showToast } = useToast();
 
   const [signatures, setSignatures] = useState<Signature[]>([]);
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -79,7 +83,16 @@ export default function SignaturesPage() {
         body: JSON.stringify({ status: "Signed", completedAt: new Date().toISOString() }),
       });
       if (res.ok) {
+        const result = await res.json();
+        const cascadeMsg = result?.cascaded?.documentSigned
+          ? " Document fully signed!"
+          : "";
         await fetchData();
+        const oldPct = compliance?.master ?? 0;
+        const newData = await refreshCompliance();
+        if (newData) {
+          showToast(`Signature recorded.${cascadeMsg} Compliance: ${oldPct}% → ${newData.master}%`);
+        }
       }
     } catch (err) {
       console.error("Failed to update signature:", err);

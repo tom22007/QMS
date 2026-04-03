@@ -3,6 +3,8 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import StatusBadge from "@/components/StatusBadge";
+import { useCompliance } from "@/components/ComplianceContext";
+import { useToast } from "@/components/ToastProvider";
 
 interface ChecklistItem {
   id: number;
@@ -42,6 +44,8 @@ const SHAREPOINT_BASE =
 export default function AuditPage() {
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === "admin";
+  const { data: compliance, refresh: refreshCompliance } = useCompliance();
+  const { showToast } = useToast();
   const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
   const [keyDates, setKeyDates] = useState<KeyDate[]>([]);
   const [sops, setSops] = useState<Sop[]>([]);
@@ -73,6 +77,12 @@ export default function AuditPage() {
     if (res.ok) {
       const updated = await res.json();
       setChecklist((prev) => prev.map((c) => (c.id === item.id ? updated : c)));
+      const oldPct = compliance?.master ?? 0;
+      const newData = await refreshCompliance();
+      if (newData) {
+        const action = updated.checked ? "checked" : "unchecked";
+        showToast(`Audit item ${action}. Compliance: ${oldPct}% → ${newData.master}%`);
+      }
     }
   }
 
