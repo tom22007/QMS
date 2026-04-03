@@ -2,7 +2,9 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useState, useEffect } from "react";
-import { getSharePointUrl } from "@/lib/sharepoint";
+
+const SHAREPOINT_BASE =
+  "https://reesscientific0-my.sharepoint.com/personal/todonnell_reesscientific_com/Documents/Claude%20-%20Rees%20Software%20Validation%20Documents";
 
 function ViewerContent() {
   const searchParams = useSearchParams();
@@ -12,13 +14,12 @@ function ViewerContent() {
   const folder = searchParams.get("folder") || "";
   const filename = searchParams.get("filename") || "";
 
-  const sharepointUrl = getSharePointUrl(folder, filename);
-  // Office Online embed: works for OneDrive/SharePoint files when user is authenticated
-  const embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(sharepointUrl)}`;
-  // Direct web view (opens in Office Online if user is logged into SharePoint)
-  const webViewUrl = `${sharepointUrl}?web=1`;
+  // SharePoint web view URL — opens the file in Office Online when authenticated
+  const webViewUrl = `${SHAREPOINT_BASE}/${folder}/${encodeURIComponent(filename)}?web=1`;
+  // SharePoint embed URL — uses SharePoint's own embed endpoint for authenticated users
+  const embedUrl = `${SHAREPOINT_BASE}/${folder}/${encodeURIComponent(filename)}?action=embedview`;
 
-  const [iframeError, setIframeError] = useState(false);
+  const [viewMode, setViewMode] = useState<"embed" | "fallback">("embed");
   const [docData, setDocData] = useState<{ title: string; revision: string; notes: string } | null>(null);
 
   useEffect(() => {
@@ -29,6 +30,16 @@ function ViewerContent() {
         if (doc) setDocData({ title: doc.title, revision: doc.revision, notes: doc.notes });
       });
   }, [docId]);
+
+  // Detect if iframe loaded a download instead of rendering
+  useEffect(() => {
+    // Give the embed 5 seconds; if the user reports issues they can click "Open in browser"
+    const timer = setTimeout(() => {
+      // We can't detect cross-origin iframe failures reliably,
+      // but the fallback button is always visible
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [embedUrl]);
 
   return (
     <div className="flex flex-col h-[calc(100vh-73px)] -m-8">
@@ -57,39 +68,44 @@ function ViewerContent() {
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
+          {viewMode === "embed" && (
+            <button
+              onClick={() => setViewMode("fallback")}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-text-med bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Not loading?
+            </button>
+          )}
+          {viewMode === "fallback" && (
+            <button
+              onClick={() => setViewMode("embed")}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-text-med bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Try embed
+            </button>
+          )}
           <a
             href={webViewUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-navy bg-navy/5 rounded-lg hover:bg-navy/10 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-navy rounded-lg hover:bg-navy/90 transition-colors"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
-            Open in SharePoint
-          </a>
-          <a
-            href={sharepointUrl}
-            download
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-text-med bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Download
+            Open in Browser
           </a>
         </div>
       </div>
 
       {/* Document viewer */}
-      {!iframeError ? (
+      {viewMode === "embed" ? (
         <div className="flex-1 bg-gray-100">
           <iframe
             src={embedUrl}
             className="w-full h-full border-0"
             title={`Viewing ${docId}`}
-            onError={() => setIframeError(true)}
-            sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+            allow="fullscreen"
           />
         </div>
       ) : (
@@ -98,7 +114,6 @@ function ViewerContent() {
             docId={docId}
             docData={docData}
             webViewUrl={webViewUrl}
-            sharepointUrl={sharepointUrl}
           />
         </div>
       )}
@@ -110,12 +125,10 @@ function FallbackView({
   docId,
   docData,
   webViewUrl,
-  sharepointUrl,
 }: {
   docId: string;
   docData: { title: string; revision: string; notes: string } | null;
   webViewUrl: string;
-  sharepointUrl: string;
 }) {
   return (
     <div className="text-center max-w-md">
@@ -132,31 +145,19 @@ function FallbackView({
         <p className="text-xs text-text-med/60 mb-6 px-4">{docData.notes}</p>
       )}
       <p className="text-sm text-text-med mb-6">
-        This document is stored in SharePoint. Sign in to your Microsoft account to view it inline, or use the links below.
+        Click below to open this document in Office Online. You&apos;ll need to be signed into your Microsoft account.
       </p>
-      <div className="flex flex-col gap-3">
-        <a
-          href={webViewUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-navy text-white rounded-lg font-medium text-sm hover:bg-navy-light transition-colors"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
-          Open in Office Online
-        </a>
-        <a
-          href={sharepointUrl}
-          download
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-gray-200 text-text-dark rounded-lg font-medium text-sm hover:bg-gray-50 transition-colors"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
-          Download from SharePoint
-        </a>
-      </div>
+      <a
+        href={webViewUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-navy text-white rounded-lg font-medium text-sm hover:bg-navy/90 transition-colors"
+      >
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+        Open in Office Online
+      </a>
     </div>
   );
 }
