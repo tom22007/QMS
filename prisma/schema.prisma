@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+  role     String @default("viewer")
+  name     String
+  title    String @default("")
+}
+
+model Document {
+  id              Int     @id @default(autoincrement())
+  docId           String  @unique
+  title           String
+  revision        String
+  folder          String
+  filename        String
+  draftStatus     String  @default("Draft")
+  signatureStatus String  @default("Not required")
+  adobeSignTags   Boolean @default(false)
+  signerCount     Int     @default(0)
+  dateIssued      String?
+  notes           String  @default("")
+}
+
+model ActionItem {
+  id          Int      @id @default(autoincrement())
+  priority    String
+  description String
+  owner       String
+  linkedDocId String
+  status      String   @default("Open")
+  category    String   @default("")
+  completedBy String?
+  completedAt String?
+}
+
+model ChangeControlStep {
+  id          Int    @id @default(autoincrement())
+  crfNumber   String
+  stepNumber  Int
+  stepName    String
+  description String
+  status      String @default("Pending")
+}
+
+model ImplementationAction {
+  id           Int     @id @default(autoincrement())
+  crfNumber    String
+  actionNumber Int
+  description  String
+  owner        String
+  targetDate   String?
+  status       String  @default("Pending")
+}
+
+model Signature {
+  id           Int     @id @default(autoincrement())
+  docId        String
+  signerNumber Int
+  role         String
+  signerName   String
+  status       String  @default("Pending")
+  completedAt  String?
+}
+
+model AuditChecklistItem {
+  id          Int     @id @default(autoincrement())
+  description String
+  linkedDocId String?
+  checked     Boolean @default(false)
+  checkedBy   String?
+  checkedAt   String?
+}
+
+model ActivityLog {
+  id            Int    @id @default(autoincrement())
+  timestamp     String
+  username      String
+  action        String
+  previousValue String @default("")
+  newValue      String @default("")
+}
+
+model KeyDate {
+  id        Int    @id @default(autoincrement())
+  milestone String
+  date      String?
+  status    String
+}
+
+model GoverningSop {
+  id            Int     @id @default(autoincrement())
+  sopNumber     String
+  title         String
+  revision      String?
+  effectiveDate String?
+  aligned       Boolean @default(true)
+}

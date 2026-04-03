@@ -1,0 +1,342 @@
+{
+  "config": {
+    "sharepointBaseUrl": "https://reesscientific0-my.sharepoint.com/personal/todonnell_reesscientific_com/Documents/Claude%20-%20Rees%20Software%20Validation%20Documents/",
+    "companyName": "Rees Scientific Corporation",
+    "companyAddress": "1007 Whitehead Road Ext., Trenton, NJ 08638",
+    "systemName": "Centron Presidio EMS with Helix GUI",
+    "gampCategory": "Category 4 — Configured Product",
+    "branding": {
+      "primaryColor": "#0D3B66",
+      "secondaryColor": "#5BA544",
+      "accentColor": "#D85A30",
+      "headerBg": "#D5E8F0",
+      "textDark": "#1B2A3D",
+      "textMed": "#4A6274"
+    }
+  },
+  "users": [
+    { "username": "todonnell", "password": "rees2026!", "role": "admin", "name": "Tommy O'Donnell", "title": "VP Quality & Validation" },
+    { "username": "svyas", "password": "rees2026!", "role": "viewer", "name": "Sameer Vyas", "title": "Software Engineering" },
+    { "username": "gconners", "password": "rees2026!", "role": "viewer", "name": "Gary Conners", "title": "VP Engineering" },
+    { "username": "nfanelli", "password": "rees2026!", "role": "viewer", "name": "Nicholas Fanelli", "title": "Quality Assurance" },
+    { "username": "awright", "password": "rees2026!", "role": "viewer", "name": "Andrew Wright", "title": "Product Support" }
+  ],
+  "documents": [
+    {
+      "docId": "VMP-0001",
+      "title": "Validation Master Plan",
+      "revision": "1.0",
+      "folder": "01_Planning",
+      "filename": "VMP-0001_Centron_Helix.docx",
+      "draftStatus": "Complete",
+      "signatureStatus": "Needs signature",
+      "adobeSignTags": true,
+      "signerCount": 3,
+      "dateIssued": "2026-03-18",
+      "notes": "PQ is client responsibility per §5.5. SOP-0083/0084 aligned."
+    },
+    {
+      "docId": "URS-0001",
+      "title": "User Requirements Specification",
+      "revision": "1.0",
+      "folder": "02_Specifications",
+      "filename": "URS-0001_Helix_EMS.docx",
+      "draftStatus": "Complete",
+      "signatureStatus": "Needs signature",
+      "adobeSignTags": true,
+      "signerCount": 3,
+      "dateIssued": "2026-03-18",
+      "notes": "93 requirements. REQ-30 covers SSO."
+    },
+    {
+      "docId": "FS-0001",
+      "title": "Functional Specification",
+      "revision": "1.0",
+      "folder": "02_Specifications",
+      "filename": "FS-0001_Centron_Helix.docx",
+      "draftStatus": "Complete",
+      "signatureStatus": "Needs signature",
+      "adobeSignTags": true,
+      "signerCount": 3,
+      "dateIssued": "2026-03-18",
+      "notes": "Rev 12 content. Added Helix GUI, API, MQTT, Part 11, ALCOA+, cybersecurity, GAMP 5."
+    },
+    {
+      "docId": "DS-0001",
+      "title": "Design Specification",
+      "revision": "2.0",
+      "folder": "02_Specifications",
+      "filename": "DS-0001_Helix_GUI_Design_Specification.docx",
+      "draftStatus": "Complete",
+      "signatureStatus": "No tags",
+      "adobeSignTags": false,
+      "signerCount": 0,
+      "dateIssued": "2026-03-23",
+      "notes": "User-uploaded file. Sign separately or add Adobe Sign tags."
+    },
+    {
+      "docId": "CS-0001",
+      "title": "Configuration Specification",
+      "revision": "1.0",
+      "folder": "02_Specifications",
+      "filename": "CS-0001_Configuration_Specification.docx",
+      "draftStatus": "Template",
+      "signatureStatus": "Needs signature",
+      "adobeSignTags": true,
+      "signerCount": 3,
+      "dateIssued": null,
+      "notes": "Template — needs site-specific hardware/network/user data before signing."
+    },
+    {
+      "docId": "RA-0001",
+      "title": "Risk Assessment (FMEA)",
+      "revision": "2.0",
+      "folder": "03_Risk_Assessment",
+      "filename": "RA-0001_Risk_Assessment_FMEA.docx",
+      "draftStatus": "Complete",
+      "signatureStatus": "No tags",
+      "adobeSignTags": false,
+      "signerCount": 0,
+      "dateIssued": "2026-03-23",
+      "notes": "20 failure modes. SOP-0084 2-factor scoring. All Low after controls."
+    },
+    {
+      "docId": "RA-2026-0003",
+      "title": "Release Risk Assessment",
+      "revision": "1.0",
+      "folder": "03_Risk_Assessment",
+      "filename": "RA-2026-0003_Helix_Risk_Assessment.docx",
+      "draftStatus": "Complete",
+      "signatureStatus": "No tags",
+      "adobeSignTags": false,
+      "signerCount": 0,
+      "dateIssued": "2026-03-30",
+      "notes": "18 gaps incl. SSO. Initial: 4 Critical, 14 Moderate. Residual: all 18 Low."
+    },
+    {
+      "docId": "RTM-0001",
+      "title": "Requirements Traceability Matrix",
+      "revision": "1.0",
+      "folder": "04_Traceability",
+      "filename": "RTM-0001_Traceability_Matrix.xlsx",
+      "draftStatus": "Complete",
+      "signatureStatus": "N/A",
+      "adobeSignTags": false,
+      "signerCount": 0,
+      "dateIssued": "2026-03-18",
+      "notes": "Excel file. 93 requirements, 100% traced to IQ/OQ. REQ-30 traced to IOQ-0163-A1."
+    },
+    {
+      "docId": "ERES-0001",
+      "title": "21 CFR Part 11 / EU Annex 11 Assessment",
+      "revision": "1.0",
+      "folder": "04_Traceability",
+      "filename": "ERES-0001_Part11_Assessment.docx",
+      "draftStatus": "Complete",
+      "signatureStatus": "Needs signature",
+      "adobeSignTags": true,
+      "signerCount": 3,
+      "dateIssued": "2026-03-18",
+      "notes": "40/40 clauses compliant. 0 non-compliant."
+    },
+    {
+      "docId": "IOQ-0163",
+      "title": "IQ/OQ Protocol — Helix GUI",
+      "revision": "Rev 0",
+      "folder": "05_Protocols",
+      "filename": "IOQ-0163_Helix_GUI.docx",
+      "draftStatus": "Executed",
+      "signatureStatus": "Signed",
+      "adobeSignTags": false,
+      "signerCount": 3,
+      "dateIssued": "2026-03-12",
+      "notes": "Signed via Adobe Acrobat Sign 12 Mar 2026. Executed 26-31 Mar 2026 by Andrew Wright. DEV-001 resolved."
+    },
+    {
+      "docId": "IOQ-0163-A1",
+      "title": "SSO Addendum — IOQ-0163",
+      "revision": "1.0",
+      "folder": "05_Protocols",
+      "filename": "IOQ-0163-A1_SSO_Addendum.docx",
+      "draftStatus": "Complete",
+      "signatureStatus": "Needs signature",
+      "adobeSignTags": true,
+      "signerCount": 6,
+      "dateIssued": null,
+      "notes": "28 SSO test steps. 3 approval + 3 execution signers. CC = CRF-2026-0002. Pending execution."
+    },
+    {
+      "docId": "PQ-0001",
+      "title": "Performance Qualification",
+      "revision": "1.0",
+      "folder": "05_Protocols",
+      "filename": "PQ-0001_Performance_Qualification.docx",
+      "draftStatus": "Template",
+      "signatureStatus": "Needs signature",
+      "adobeSignTags": true,
+      "signerCount": 6,
+      "dateIssued": null,
+      "notes": "Template for client use. PQ is client responsibility per VMP-0001 §5.5."
+    },
+    {
+      "docId": "SVR-IOQ-0163",
+      "title": "Validation Summary Report",
+      "revision": "1.0",
+      "folder": "06_Reports",
+      "filename": "SVR-IOQ-0163_Validation_Summary_Report.docx",
+      "draftStatus": "Complete",
+      "signatureStatus": "Needs signature",
+      "adobeSignTags": true,
+      "signerCount": 3,
+      "dateIssued": "2026-04-02",
+      "notes": "Status: QUALIFIED (Manufacturer IQ/OQ Complete). References both RA-0001 and RA-2026-0003."
+    },
+    {
+      "docId": "CCL-0001",
+      "title": "Change Control Log",
+      "revision": "1.0",
+      "folder": "07_Change_Control",
+      "filename": "CCL-0001_Change_Control_Log.docx",
+      "draftStatus": "Active",
+      "signatureStatus": "N/A",
+      "adobeSignTags": false,
+      "signerCount": 0,
+      "dateIssued": null,
+      "notes": "Living document. Updated as change controls are initiated."
+    },
+    {
+      "docId": "CRF-2026-0002",
+      "title": "Change Control — Helix GUI + SSO",
+      "revision": "1.0",
+      "folder": "07_Change_Control",
+      "filename": "CRF-2026-0002_Helix_GUI_Change_Control.docx",
+      "draftStatus": "Complete",
+      "signatureStatus": "Needs signature",
+      "adobeSignTags": true,
+      "signerCount": 4,
+      "dateIssued": "2026-04-02",
+      "notes": "Per SOP-0083 6-step process. Covers Helix GUI initial release + SSO. Major change, Engineering: Software."
+    }
+  ],
+  "actionItems": [
+    { "id": 1, "priority": "High", "description": "Route VMP-0001 for e-signature via Adobe Sign", "owner": "QV", "linkedDocId": "VMP-0001", "status": "Open", "category": "signature" },
+    { "id": 2, "priority": "High", "description": "Route URS-0001 for e-signature via Adobe Sign", "owner": "QV", "linkedDocId": "URS-0001", "status": "Open", "category": "signature" },
+    { "id": 3, "priority": "High", "description": "Route FS-0001 for e-signature via Adobe Sign", "owner": "QV", "linkedDocId": "FS-0001", "status": "Open", "category": "signature" },
+    { "id": 4, "priority": "High", "description": "Route ERES-0001 for e-signature via Adobe Sign", "owner": "QV", "linkedDocId": "ERES-0001", "status": "Open", "category": "signature" },
+    { "id": 5, "priority": "High", "description": "Route SVR-IOQ-0163 for e-signature via Adobe Sign", "owner": "QV", "linkedDocId": "SVR-IOQ-0163", "status": "Open", "category": "signature" },
+    { "id": 6, "priority": "High", "description": "Route CRF-2026-0002 for e-signature via Adobe Sign", "owner": "QV", "linkedDocId": "CRF-2026-0002", "status": "Open", "category": "signature" },
+    { "id": 7, "priority": "Medium", "description": "Route CS-0001 for e-signature (after site data populated)", "owner": "QV", "linkedDocId": "CS-0001", "status": "Open", "category": "signature" },
+    { "id": 8, "priority": "Medium", "description": "Route PQ-0001 for e-signature (template for client)", "owner": "QV", "linkedDocId": "PQ-0001", "status": "Open", "category": "signature" },
+    { "id": 9, "priority": "Medium", "description": "Route IOQ-0163-A1 for approval signatures", "owner": "QV", "linkedDocId": "IOQ-0163-A1", "status": "Open", "category": "signature" },
+    { "id": 10, "priority": "Medium", "description": "Route IOQ-0163-A1 for execution signatures (after SSO testing)", "owner": "QV", "linkedDocId": "IOQ-0163-A1", "status": "Open", "category": "signature" },
+    { "id": 11, "priority": "High", "description": "Execute IOQ-0163-A1 (SSO addendum) — 28 test steps", "owner": "QV", "linkedDocId": "IOQ-0163-A1", "status": "Open", "category": "execution" },
+    { "id": 12, "priority": "Low", "description": "Populate CS-0001 with site-specific configuration", "owner": "QV + Client IT", "linkedDocId": "CS-0001", "status": "Open", "category": "execution" },
+    { "id": 13, "priority": "Low", "description": "Schedule annual periodic review (due Mar 2027)", "owner": "QV", "linkedDocId": "VMP-0001", "status": "Open", "category": "planning" },
+    { "id": 14, "priority": "Low", "description": "Establish training records for system users", "owner": "Client QA", "linkedDocId": "VMP-0001", "status": "Open", "category": "planning" },
+    { "id": 15, "priority": "High", "description": "Complete Validation Summary Report with execution data", "owner": "QV", "linkedDocId": "SVR-IOQ-0163", "status": "Complete", "completedBy": "todonnell", "completedAt": "2026-04-02T18:00:00Z", "category": "execution" },
+    { "id": 16, "priority": "High", "description": "Build change control for Helix release + SSO", "owner": "QV", "linkedDocId": "CRF-2026-0002", "status": "Complete", "completedBy": "todonnell", "completedAt": "2026-04-02T20:00:00Z", "category": "execution" },
+    { "id": 17, "priority": "High", "description": "Add SSO gap to release risk assessment", "owner": "QV", "linkedDocId": "RA-2026-0003", "status": "Complete", "completedBy": "todonnell", "completedAt": "2026-04-02T21:00:00Z", "category": "execution" }
+  ],
+  "changeControl": {
+    "crfNumber": "CRF-2026-0002",
+    "title": "Helix GUI Initial Software Release and SSO Authentication Addition",
+    "changeType": "Engineering: Software (SOP-0083 §7.2.1.3)",
+    "priority": "Major (SOP-0083 §7.3.3)",
+    "initiatedBy": "T. O'Donnell",
+    "dateInitiated": "2026-04-02",
+    "steps": [
+      { "stepNumber": 1, "stepName": "Change Proposal", "description": "Engineering: Software, Major priority. Covers Helix GUI v1.0 release and SSO addition.", "status": "Complete" },
+      { "stepNumber": 2, "stepName": "Evaluation", "description": "QA evaluation, RA-2026-0003 completed (18 gaps, all Low residual). Departments notified.", "status": "Complete" },
+      { "stepNumber": 3, "stepName": "Approval", "description": "Approved with conditions — local auth released, SSO restricted until IOQ-0163-A1 executed.", "status": "Needs signature" },
+      { "stepNumber": 4, "stepName": "Implementation", "description": "8 action items: 5 complete, 3 pending (release, SSO addendum, SSO deployment).", "status": "In progress" },
+      { "stepNumber": 5, "stepName": "Review/Verification", "description": "QA verification of all implementation actions.", "status": "Pending" },
+      { "stepNumber": 6, "stepName": "Final Approval", "description": "QA department lead final sign-off.", "status": "Needs signature" }
+    ],
+    "implementationActions": [
+      { "actionNumber": 1, "description": "Finalize and approve all V-Model qualification documents", "owner": "QV", "targetDate": "2026-04-02", "status": "Complete" },
+      { "actionNumber": 2, "description": "Execute IOQ-0163 Rev 0 (IQ/OQ) at manufacturer facility", "owner": "Product Support", "targetDate": "2026-03-31", "status": "Complete" },
+      { "actionNumber": 3, "description": "Resolve deviation DEV-001 (email server config)", "owner": "Product Support", "targetDate": "2026-03-30", "status": "Closed" },
+      { "actionNumber": 4, "description": "Complete release risk assessment RA-2026-0003", "owner": "QV", "targetDate": "2026-03-30", "status": "Complete" },
+      { "actionNumber": 5, "description": "Issue Validation Summary Report SVR-IOQ-0163", "owner": "QV", "targetDate": "2026-04-02", "status": "Complete" },
+      { "actionNumber": 6, "description": "Release Helix GUI v1.0 for deployment (local auth only)", "owner": "Engineering", "targetDate": null, "status": "Pending" },
+      { "actionNumber": 7, "description": "Execute IOQ-0163-A1 (SSO Addendum)", "owner": "QV", "targetDate": null, "status": "Pending" },
+      { "actionNumber": 8, "description": "Release SSO for GMP deployment upon addendum approval", "owner": "QV / Engineering", "targetDate": null, "status": "Pending" }
+    ]
+  },
+  "signatures": [
+    { "docId": "IOQ-0163", "signerNumber": 1, "role": "Author", "signerName": "Sameer Vyas", "status": "Signed", "completedAt": "2026-03-12" },
+    { "docId": "IOQ-0163", "signerNumber": 2, "role": "Engineering Review", "signerName": "Gary Conners", "status": "Signed", "completedAt": "2026-03-12" },
+    { "docId": "IOQ-0163", "signerNumber": 3, "role": "QA Approval", "signerName": "Nicholas Fanelli", "status": "Signed", "completedAt": "2026-03-12" }
+  ],
+  "riskAssessments": {
+    "RA-0001": {
+      "title": "FMEA Risk Assessment",
+      "methodology": "SOP-0084: Likelihood × Impact/Severity = RPN (max 25)",
+      "totalItems": 20,
+      "initial": { "critical": 0, "moderate": 8, "low": 12 },
+      "residual": { "critical": 0, "moderate": 0, "low": 20 }
+    },
+    "RA-2026-0003": {
+      "title": "Release Risk Assessment",
+      "methodology": "Likelihood × Impact = RPN",
+      "totalItems": 18,
+      "initial": { "critical": 4, "moderate": 14, "low": 0 },
+      "residual": { "critical": 0, "moderate": 0, "low": 18 },
+      "ssoGap": { "initialRpn": 12, "residualRpn": 4, "control": "IOQ-0163-A1" }
+    }
+  },
+  "deviations": [
+    { "id": "DEV-001", "section": "OQ-10.5", "classification": "Minor", "status": "Closed", "description": "Alarm email not received due to email server config. Corrected and re-verified same session." }
+  ],
+  "rtmCoverage": {
+    "totalRequirements": 93,
+    "ursToIqOq": 100,
+    "ursToFs": 97,
+    "ursToDs": 47,
+    "ursToRa": 65
+  },
+  "part11Compliance": {
+    "totalClauses": 40,
+    "compliant": 40,
+    "nonCompliant": 0,
+    "systemControls": 31,
+    "proceduralControls": 9
+  },
+  "auditChecklist": [
+    { "id": 1, "description": "VMP-0001 e-signed via Adobe Sign", "linkedDocId": "VMP-0001", "checked": false },
+    { "id": 2, "description": "URS-0001 e-signed via Adobe Sign", "linkedDocId": "URS-0001", "checked": false },
+    { "id": 3, "description": "FS-0001 e-signed via Adobe Sign", "linkedDocId": "FS-0001", "checked": false },
+    { "id": 4, "description": "DS-0001 reviewed", "linkedDocId": "DS-0001", "checked": true },
+    { "id": 5, "description": "RA-0001 + RA-2026-0003 complete", "linkedDocId": "RA-0001", "checked": true },
+    { "id": 6, "description": "RTM-0001 100% traced (93 requirements)", "linkedDocId": "RTM-0001", "checked": true },
+    { "id": 7, "description": "ERES-0001 e-signed via Adobe Sign", "linkedDocId": "ERES-0001", "checked": false },
+    { "id": 8, "description": "IOQ-0163 executed + signed (Adobe Sign)", "linkedDocId": "IOQ-0163", "checked": true },
+    { "id": 9, "description": "DEV-001 investigated and closed", "linkedDocId": null, "checked": true },
+    { "id": 10, "description": "SVR-IOQ-0163 e-signed via Adobe Sign", "linkedDocId": "SVR-IOQ-0163", "checked": false },
+    { "id": 11, "description": "CRF-2026-0002 e-signed via Adobe Sign", "linkedDocId": "CRF-2026-0002", "checked": false },
+    { "id": 12, "description": "PQ-0001 client responsibility (VMP §5.5)", "linkedDocId": "PQ-0001", "checked": true },
+    { "id": 13, "description": "IOQ-0163-A1 approved + executed", "linkedDocId": "IOQ-0163-A1", "checked": false },
+    { "id": 14, "description": "CS-0001 populated + signed", "linkedDocId": "CS-0001", "checked": false },
+    { "id": 15, "description": "Training records on file", "linkedDocId": null, "checked": false },
+    { "id": 16, "description": "Periodic review scheduled (Mar 2027)", "linkedDocId": null, "checked": false }
+  ],
+  "keyDates": [
+    { "milestone": "IOQ-0163 signed (Adobe Sign)", "date": "2026-03-12", "status": "Done" },
+    { "milestone": "Specifications drafted", "date": "2026-03-18", "status": "Done" },
+    { "milestone": "DS-0001 approved", "date": "2026-03-23", "status": "Done" },
+    { "milestone": "IOQ-0163 executed", "date": "2026-03-31", "status": "Done" },
+    { "milestone": "RA-2026-0003 completed", "date": "2026-03-30", "status": "Done" },
+    { "milestone": "SVR-IOQ-0163 drafted", "date": "2026-04-02", "status": "Done" },
+    { "milestone": "CRF-2026-0002 drafted", "date": "2026-04-02", "status": "Done" },
+    { "milestone": "Route docs for Adobe Sign", "date": null, "status": "Needed" },
+    { "milestone": "SSO addendum execution", "date": null, "status": "Pending" },
+    { "milestone": "Annual periodic review", "date": "2027-03-01", "status": "Scheduled" }
+  ],
+  "governingSops": [
+    { "sopNumber": "SOP-0083", "title": "Change Control Procedure", "revision": "Rev 1", "effectiveDate": "2026-03-26", "aligned": true },
+    { "sopNumber": "SOP-0084", "title": "Risk Assessment Procedure", "revision": "Rev 0", "effectiveDate": "2024-09-11", "aligned": true },
+    { "sopNumber": "SOP-0098", "title": "Part 11 / Annex 11 Assessment", "revision": null, "effectiveDate": null, "aligned": true },
+    { "sopNumber": "SOP-0107", "title": "Core Package Installation", "revision": null, "effectiveDate": null, "aligned": true },
+    { "sopNumber": "SOP-0146", "title": "Helix GUI Installation", "revision": null, "effectiveDate": null, "aligned": true }
+  ]
+}

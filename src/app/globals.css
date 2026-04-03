@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-navy: #0D3B66;
+  --color-navy-light: #1a5290;
+  --color-green: #5BA544;
+  --color-green-light: #6ec055;
+  --color-accent: #D85A30;
+  --color-header-bg: #D5E8F0;
+  --color-text-dark: #1B2A3D;
+  --color-text-med: #4A6274;
+}
+
+body {
+  font-family: "DM Sans", "Source Sans 3", "Outfit", system-ui, sans-serif;
+  color: #1B2A3D;
+}
