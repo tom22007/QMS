@@ -48,7 +48,7 @@ export async function PATCH(
       where: { id: signatureId },
       data: {
         status,
-        completedAt: status === "Signed" ? new Date().toISOString() : existing.completedAt,
+        completedAt: status === "Signed" ? new Date().toISOString() : null,
       },
     });
 
@@ -62,8 +62,57 @@ export async function PATCH(
       },
     });
 
-    // Cascading updates: check if all signatures for this document are now signed
-    let cascaded = { documentSigned: false, actionsCompleted: 0 };
+    // Cascading updates
+    let cascaded = { documentSigned: false, documentUnsigned: false, actionsCompleted: 0, actionsReopened: 0 };
+
+    // Reverse cascade: if unsigning, revert document and reopen auto-completed actions
+    if (status !== "Signed") {
+      const doc = await prisma.document.findFirst({
+        where: { docId: existing.docId },
+      });
+      if (doc && doc.signatureStatus === "Signed") {
+        await prisma.document.update({
+          where: { id: doc.id },
+          data: { signatureStatus: "In Progress" },
+        });
+        await prisma.activityLog.create({
+          data: {
+            timestamp: new Date().toISOString(),
+            username: "system",
+            action: `Auto-reverted ${existing.docId} signatureStatus to "In Progress" (signature removed)`,
+            previousValue: "Signed",
+            newValue: "In Progress",
+          },
+        });
+        cascaded.documentUnsigned = true;
+
+        // Reopen auto-completed signature-related actions
+        const autoCompletedActions = await prisma.actionItem.findMany({
+          where: {
+            linkedDocId: existing.docId,
+            status: "Complete",
+            completedBy: "system",
+            description: { contains: "signature" },
+          },
+        });
+        for (const action of autoCompletedActions) {
+          await prisma.actionItem.update({
+            where: { id: action.id },
+            data: { status: "Open", completedBy: null, completedAt: null },
+          });
+          await prisma.activityLog.create({
+            data: {
+              timestamp: new Date().toISOString(),
+              username: "system",
+              action: `Auto-reopened action "${action.description}" (signature removed from ${existing.docId})`,
+              previousValue: "Complete",
+              newValue: "Open",
+            },
+          });
+          cascaded.actionsReopened++;
+        }
+      }
+    }
 
     if (status === "Signed") {
       const allSigsForDoc = await prisma.signature.findMany({

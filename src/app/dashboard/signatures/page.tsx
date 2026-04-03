@@ -74,24 +74,27 @@ export default function SignaturesPage() {
       .filter((s) => s.docId === docId)
       .sort((a, b) => a.signerNumber - b.signerNumber);
 
-  const handleMarkSigned = async (signatureId: number) => {
+  const handleToggleSignature = async (signatureId: number, newStatus: "Signed" | "Pending") => {
     setUpdating(signatureId);
     try {
       const res = await fetch(`/api/signatures/${signatureId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "Signed", completedAt: new Date().toISOString() }),
+        body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
         const result = await res.json();
-        const cascadeMsg = result?.cascaded?.documentSigned
-          ? " Document fully signed!"
-          : "";
         await fetchData();
         const oldPct = compliance?.master ?? 0;
         const newData = await refreshCompliance();
         if (newData) {
-          showToast(`Signature recorded.${cascadeMsg} Compliance: ${oldPct}% → ${newData.master}%`);
+          if (newStatus === "Signed") {
+            const cascadeMsg = result?.cascaded?.documentSigned ? " Document fully signed!" : "";
+            showToast(`Signature recorded.${cascadeMsg} Compliance: ${oldPct}% → ${newData.master}%`);
+          } else {
+            const cascadeMsg = result?.cascaded?.documentUnsigned ? " Document reverted." : "";
+            showToast(`Signature undone.${cascadeMsg} Compliance: ${oldPct}% → ${newData.master}%`);
+          }
         }
       }
     } catch (err) {
@@ -158,11 +161,20 @@ export default function SignaturesPage() {
                             <StatusBadge status={signer.status} />
                             {isAdmin && signer.status !== "Signed" && (
                               <button
-                                onClick={() => handleMarkSigned(signer.id)}
+                                onClick={() => handleToggleSignature(signer.id, "Signed")}
                                 disabled={isUpdating}
                                 className="mt-1 text-xs px-2 py-0.5 rounded bg-green/10 text-green hover:bg-green/20 transition-colors font-medium disabled:opacity-50"
                               >
                                 Mark Signed
+                              </button>
+                            )}
+                            {isAdmin && signer.status === "Signed" && (
+                              <button
+                                onClick={() => handleToggleSignature(signer.id, "Pending")}
+                                disabled={isUpdating}
+                                className="mt-1 text-xs px-2 py-0.5 rounded bg-accent/10 text-accent hover:bg-accent/20 transition-colors font-medium disabled:opacity-50"
+                              >
+                                Undo
                               </button>
                             )}
                             {signer.completedAt && (

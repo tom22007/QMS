@@ -63,13 +63,13 @@ export default function ActionsPage() {
     return documents.find((d) => d.docId === linkedDocId);
   };
 
-  const handleComplete = async (id: number) => {
+  const handleToggle = async (id: number, newStatus: "Complete" | "Open") => {
     setCompleting(id);
     try {
       const res = await fetch(`/api/actions/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "Complete" }),
+        body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
         const updated = await res.json();
@@ -79,11 +79,12 @@ export default function ActionsPage() {
         const oldPct = compliance?.master ?? 0;
         const newData = await refreshCompliance();
         if (newData) {
-          showToast(`Action completed. Compliance: ${oldPct}% → ${newData.master}%`);
+          const label = newStatus === "Complete" ? "Action completed" : "Action reopened";
+          showToast(`${label}. Compliance: ${oldPct}% → ${newData.master}%`);
         }
       }
     } catch (error) {
-      console.error("Failed to complete action:", error);
+      console.error("Failed to update action:", error);
     } finally {
       setCompleting(null);
     }
@@ -183,7 +184,7 @@ export default function ActionsPage() {
                       {isAdmin && (
                         <td className="px-4 py-3">
                           <button
-                            onClick={() => handleComplete(action.id)}
+                            onClick={() => handleToggle(action.id, "Complete")}
                             disabled={completing === action.id}
                             className="px-3 py-1.5 text-xs font-medium text-white bg-green rounded-lg hover:bg-green/90 disabled:opacity-50 transition-colors"
                           >
@@ -232,13 +233,18 @@ export default function ActionsPage() {
                   <th className="px-4 py-3 text-xs font-semibold text-text-dark uppercase tracking-wider">
                     Status
                   </th>
+                  {isAdmin && (
+                    <th className="px-4 py-3 text-xs font-semibold text-text-dark uppercase tracking-wider">
+                      Action
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {completedActions.map((action) => {
                   const doc = getDocData(action.linkedDocId);
                   return (
-                    <tr key={action.id} className="opacity-60">
+                    <tr key={action.id} className="opacity-70 hover:opacity-100 transition-opacity">
                       <td className="px-4 py-3">
                         <StatusBadge status={action.priority} />
                       </td>
@@ -264,10 +270,21 @@ export default function ActionsPage() {
                         {action.completedBy && (
                           <p className="text-xs text-text-med mt-1">
                             by {action.completedBy}
-                            {action.completedAt && ` on ${action.completedAt}`}
+                            {action.completedAt && ` on ${new Date(action.completedAt).toLocaleDateString()}`}
                           </p>
                         )}
                       </td>
+                      {isAdmin && (
+                        <td className="px-4 py-3">
+                          <button
+                            onClick={() => handleToggle(action.id, "Open")}
+                            disabled={completing === action.id}
+                            className="px-3 py-1.5 text-xs font-medium text-accent bg-accent/10 rounded-lg hover:bg-accent/20 disabled:opacity-50 transition-colors"
+                          >
+                            {completing === action.id ? "Saving..." : "Undo"}
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   );
                 })}

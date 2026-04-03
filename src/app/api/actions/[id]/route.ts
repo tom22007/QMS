@@ -34,12 +34,15 @@ export async function PATCH(
 
     const username = (session.user as { username?: string }).username ?? session.user.name ?? "unknown";
 
+    const body = await request.json();
+    const newStatus = body.status === "Open" ? "Open" : "Complete";
+
     const updated = await prisma.actionItem.update({
       where: { id: actionId },
       data: {
-        status: "Complete",
-        completedBy: username,
-        completedAt: new Date().toISOString(),
+        status: newStatus,
+        completedBy: newStatus === "Complete" ? username : null,
+        completedAt: newStatus === "Complete" ? new Date().toISOString() : null,
       },
     });
 
@@ -47,9 +50,9 @@ export async function PATCH(
       data: {
         timestamp: new Date().toISOString(),
         username,
-        action: `Completed action item #${actionId}: ${existing.description}`,
+        action: `${newStatus === "Complete" ? "Completed" : "Reopened"} action item #${actionId}: ${existing.description}`,
         previousValue: existing.status,
-        newValue: "Complete",
+        newValue: newStatus,
       },
     });
 
