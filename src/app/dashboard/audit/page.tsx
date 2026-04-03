@@ -38,9 +38,6 @@ interface Doc {
   filename: string;
 }
 
-const SHAREPOINT_BASE =
-  "https://reesscientific0-my.sharepoint.com/personal/todonnell_reesscientific_com/Documents/Claude%20-%20Rees%20Software%20Validation%20Documents/";
-
 export default function AuditPage() {
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === "admin";
@@ -90,9 +87,9 @@ export default function AuditPage() {
     if (!docId) return null;
     const doc = docs.find((d) => d.docId === docId);
     if (!doc) return docId;
-    const url = `${SHAREPOINT_BASE}${doc.folder}/${encodeURIComponent(doc.filename)}`;
+    const viewerUrl = `/dashboard/viewer?docId=${encodeURIComponent(doc.docId)}&folder=${encodeURIComponent(doc.folder)}&filename=${encodeURIComponent(doc.filename)}`;
     return (
-      <a href={url} target="_blank" rel="noopener noreferrer" className="text-navy hover:text-navy-light underline decoration-navy/30">
+      <a href={viewerUrl} className="text-navy hover:text-navy-light underline decoration-navy/30">
         {docId}
       </a>
     );
